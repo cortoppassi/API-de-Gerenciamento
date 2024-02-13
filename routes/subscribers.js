@@ -12,7 +12,7 @@ const realizarConsultaDiaria = async () => {
         console.error('Erro na consulta diária:', error.message);
     }
 };
-const tarefaDiaria = schedule.scheduleJob('42 19 * * *', realizarConsultaDiaria);
+const tarefaDiaria = schedule.scheduleJob('53 19 * * *', realizarConsultaDiaria);
 
 router.get('/', async (req, res) => {
     try {

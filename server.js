@@ -1,28 +1,26 @@
-
 const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
-const subscribers = require('./routes/subscribers')
-
+const subscribers = require('./routes/subscribers');
+const nodeCron = require('./routes/nodeCron');
 const schedule = require('node-schedule');
-const data = new Date(2024, 1, 13, 19, 34);
+require('dotenv').config();
 
-schedule.scheduleJob(data, () => {
-    mongoose.connect(process.env.DATABASE_STRING)
-    const db = mongoose.connection
-    db.on('error', (err)=> console.log(err))
-    db.once('open', ()=> console.log('Databese Connected'))
-})
+const desligar = schedule.scheduleJob('*/30 * * * * *', function(){
+    console.log('Servidor encerrado');
+});
 
-require('dotenv').config()
+mongoose.connect(process.env.DATABASE_STRING);
+const db = mongoose.connection;
+
+db.on('error', (err) => console.log(err));
+db.once('open', () => console.log('Database Connected'));
 
 app.use(express.json());
-
-
-
-app.use('/subscribers', subscribers)
+app.use('/nodeCron', nodeCron);
+app.use('/subscribers', subscribers);
 
 const port = 3000;
-app.listen(port, () =>{
-    console.log(`Servidor escultando na porta http://localhost:${port}`)
-})
+app.listen(port, () => {
+    console.log(`Servidor escutando na porta http://localhost:${port}`);
+});
