@@ -7,7 +7,7 @@ const schedule = require('node-schedule');
 require('dotenv').config();
 
 const desligar = schedule.scheduleJob('*/30 * * * * *', function(){
-    console.log('Servidor encerrado');
+    console.log('Node-Schedule em 30 segundos');
 });
 
 mongoose.connect(process.env.DATABASE_STRING);
