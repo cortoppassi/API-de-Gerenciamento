@@ -17,6 +17,8 @@
     "nodemon": "^3.0.3"
   },
   "dependencies": {
-    "agenda": "^5.0.0"
+    "agenda": "^5.0.0",
+    "node-cron": "^3.0.3",
+    "node-schedule": "^2.1.1"
   }
 }

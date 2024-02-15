@@ -2,6 +2,18 @@ const express = require('express');
 const router = express.Router();
 const Subscriber = require('../models/subscriber');
 
+const schedule = require('node-schedule');
+
+const realizarConsultaDiaria = async () => {
+    try {
+        const todosOsUsuarios = await Subscriber.find();
+        console.log('Consulta diária realizada:', todosOsUsuarios);
+    } catch (error) {
+        console.error('Erro na consulta diária:', error.message);
+    }
+};
+const tarefaDiaria = schedule.scheduleJob('03 21 * * *', realizarConsultaDiaria);
+
 router.get('/', async (req, res) => {
     try {
         const subscribers = await Subscriber.find()
