@@ -1,20 +1,21 @@
 const express = require('express');
 const app = express();
-const mongoose = require('mongoose');
+// const mongoose = require('mongoose');
 const subscribers = require('./routes/subscribers');
 const nodeCron = require('./routes/nodeCron');
 const schedule = require('node-schedule');
+const db = require('./db');
 require('dotenv').config();
 
 const desligar = schedule.scheduleJob('*/30 * * * * *', function(){
     console.log('Node-Schedule em 30 segundos');
 });
 
-mongoose.connect(process.env.DATABASE_STRING);
-const db = mongoose.connection;
+// mongoose.connect(process.env.DATABASE_STRING);
+// const db = mongoose.connection;
 
-db.on('error', (err) => console.log(err));
-db.once('open', () => console.log('Database Connected'));
+// db.on('error', (err) => console.log(err));
+// db.once('open', () => console.log('Database Connected'));
 
 app.use(express.json());
 app.use('/nodeCron', nodeCron);

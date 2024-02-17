@@ -18,7 +18,9 @@
   },
   "dependencies": {
     "agenda": "^5.0.0",
+    "mysql2": "^3.9.1",
     "node-cron": "^3.0.3",
-    "node-schedule": "^2.1.1"
+    "node-schedule": "^2.1.1",
+    "sequelize": "^6.37.0"
   }
 }
