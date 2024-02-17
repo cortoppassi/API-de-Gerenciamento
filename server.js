@@ -4,11 +4,11 @@ const app = express();
 const subscribers = require('./routes/subscribers');
 const nodeCron = require('./routes/nodeCron');
 const schedule = require('node-schedule');
-const db = require('./db');
 require('dotenv').config();
 
-const desligar = schedule.scheduleJob('*/30 * * * * *', function(){
-    console.log('Node-Schedule em 30 segundos');
+const iniciar = schedule.scheduleJob('*/30 * * * * *', function(){
+    const db = require('./db');
+    console.log('Database Connected - SEQUELIZE');
 });
 
 // mongoose.connect(process.env.DATABASE_STRING);
