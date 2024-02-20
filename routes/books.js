@@ -69,13 +69,13 @@ router.post("/devolution/:title", async (req, res) => {
     }
 });
 
-//Criar um novo livro - Somente para ADM
+//Cadastrar um novo livro - Somente para ADM
 router.post("/:admin", async (req, res) => {
   const { admin, name} = req.params;
   if (admin !== "true") {
     return res.status(401).json({ message: "Acesso negado!"});
   }
-  
+
   const newBook = new Book({
     title: req.body.title,
     author: req.body.author,
@@ -92,34 +92,8 @@ router.post("/:admin", async (req, res) => {
   }
 });
 
-//Atualizar um livro - Somente para ADM
-router.patch("/:id", getBook, async (req, res) => {
-  if (req.body.title != null) {
-    res.book.title = req.body.title;
-  }
-  if (req.body.author != null) {
-    res.book.author = req.body.author;
-  }
-  if (req.body.category != null) {
-    res.book.category = req.body.category;
-  }
-  if (req.body.disponibility != null) {
-    res.book.disponibility = req.body.disponibility;
-  }
-  if (req.body.deliveryDate != null) {
-    res.book.deliveryDate = req.body.deliveryDate;
-  }
-
-  try {
-    const updatedBook = await res.book.save();
-    res.json(updatedBook);
-  } catch (err) {
-    res.status(400).json({ message: err.message });
-  }
-});
-
 //Excluir um livro - Somente para ADM
-router.delete("/:id", getBook, async (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     await res.book.deleteOne();
     res.json({ message: "Livro removido com sucesso!" });
@@ -127,19 +101,5 @@ router.delete("/:id", getBook, async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 });
-
-// Middleware para obter um livro pelo ID
-async function getBook(req, res, next) {
-  try {
-    const book = await Book.findById(req.params.id);
-    if (book == null) {
-      return res.status(404).json({ message: "Livro não encontrado!" });
-    }
-    res.book = book;
-    next();
-  } catch (err) {
-    return res.status(500).json({ message: err.message });
-  }
-}
 
 module.exports = router;

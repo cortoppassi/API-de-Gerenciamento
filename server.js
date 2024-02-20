@@ -13,7 +13,7 @@ db.once('open', () => console.log('Database Connected'));
 
 
 app.use(express.json());
-app.use('/books', books);
+app.use('/', books);
 app.use('/students', students);
 
 const port = 3000;
