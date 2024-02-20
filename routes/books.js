@@ -70,7 +70,12 @@ router.post("/devolution/:title", async (req, res) => {
 });
 
 //Criar um novo livro - Somente para ADM
-router.post("/", async (req, res) => {
+router.post("/:admin", async (req, res) => {
+  const { admin, name} = req.params;
+  if (admin !== "true") {
+    return res.status(401).json({ message: "Acesso negado!"});
+  }
+  
   const newBook = new Book({
     title: req.body.title,
     author: req.body.author,

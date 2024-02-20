@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Student = require("../models/student");
+const Book = require("../models/book");
 
 // Rota para obter todos os alunos
 router.get("/", async (req, res) => {
