@@ -3,6 +3,7 @@ const router = express.Router();
 const Book = require("../models/book");
 const Student = require("../models/student");
 const auth = require("../middleware/auth");
+const student = require("../models/student");
 
 //Obter todos os livros ou filtar por title, category e author
 router.get("/filter", async (req, res) => {
@@ -25,11 +26,10 @@ router.get("/filter", async (req, res) => {
   }
 })
 
-// Rota para locação de um livro - Somente para alunos
+// Rota para locação de um livro - Somente para alunos //TODO - Adicionar Livro Locado ao rentedBooks
 router.get("/location/:title/:id", async (req, res) => {
   const { title, id } = req.params;
   try {
-    
     const studentID = await Student.findById(id);
     
     if (!studentID) {
@@ -47,7 +47,16 @@ router.get("/location/:title/:id", async (req, res) => {
     const deliveryDate = new Date();
     deliveryDate.setDate(deliveryDate.getDate() + 3);
     book.deliveryDate = deliveryDate;
+
+    
+    if (!studentID.rentedBooks) {
+      studentID.rentedBooks = [];
+    }
+
+    studentID.rentedBooks.push(book._id);
+
     await book.save();
+    await studentID.save();
 
     res.json({ message: "Livro locado com sucesso!", book, studentID });
   } catch (err) {
