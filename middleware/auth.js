@@ -1,4 +1,6 @@
 const jwt = require('jsonwebtoken');
+const admin = require('../models/admin');
+require('dotenv').config();
 
 const auth = (req, res, next) => {
   const { token } = req.headers;
@@ -8,11 +10,11 @@ const auth = (req, res, next) => {
   }
 
   try {
-    const decodedToken = jwt.verify(token, 'secreto');
+    const decodedToken = jwt.verify(token, process.env.SECRET, (err, decoded) => {
+      if (err) res.status(401).json({ message: 'Token inválido. Acesso negado!' });
 
-    if (!decodedToken) {
-      return res.status(403).json({ message: 'Acesso negado! Somente para administradores.' });
-    }
+      req.admin = decoded.admin;
+    });
 
     
     next();

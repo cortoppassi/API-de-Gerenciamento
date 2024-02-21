@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Student = require("../models/student");
 const Book = require("../models/book");
+const auth = require("../middleware/auth");
 
 // Rota para obter todos os alunos
 router.get("/", async (req, res) => {
@@ -13,8 +14,8 @@ router.get("/", async (req, res) => {
   }
 });
 
-// Rota para cadastrar um novo aluno
-router.post("/", async (req, res) => {
+// Rota para cadastrar um novo aluno - Somente para ADM
+router.post("/",  auth, async (req, res) => {
   const newStudent = new Student({
     name: req.body.name,
     cpf: req.body.cpf,
@@ -29,8 +30,8 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Rota para deletar um aluno
-router.delete("/delete/:id", async (req, res) => {
+// Rota para deletar um aluno - Somente para ADM
+router.delete("/delete/:id", auth, async (req, res) => {
   const studentId = req.params.id;
   try {
     const student = await Student.findById(studentId);

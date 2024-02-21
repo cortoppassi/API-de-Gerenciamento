@@ -3,9 +3,10 @@ const router = express.Router();
 const Admin = require("../models/admin");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
+const auth = require("../middleware/auth");
 
-//Rota para criar um novo administrador
-router.post("/", async (req, res) => {
+//Rota para criar um novo administrador - Somente para ADM
+router.post("/", auth, async (req, res) => {
   const { name, password } = req.params;
 
     const newAdmin = new Admin({
@@ -21,8 +22,8 @@ router.post("/", async (req, res) => {
   }
 });
 
-//Rota para obter todos os administradores
-router.get("/", async (req, res) => {
+//Rota para obter todos os administradores - Somente para ADM
+router.get("/", auth, async (req, res) => {
   try {
     const admins = await Admin.find();
     res.json(admins);
@@ -46,8 +47,8 @@ router.post("/login", async (req, res) => {
   }
 });
 
-//Rota para deletar um administrador
-router.delete("/admin/:id", async (req, res) => {
+//Rota para deletar um administrador - Somente para ADM
+router.delete("/admin/:id", auth, async (req, res) => {
   const adminId = req.params.id;
   try {
     const admin = await Admin.findById(adminId);

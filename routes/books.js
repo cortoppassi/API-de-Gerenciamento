@@ -34,11 +34,9 @@ router.get("/:title/:studentName", async (req, res) => {
 
       res.json({ message: "Livro locado com sucesso!", book, student });
     } else {
-      res
-        .status(404)
-        .json({
-          message: "Livro não encontrado ou não disponível para locação.",
-        });
+      res.status(404).json({
+        message: "Livro não encontrado ou não disponível para locação.",
+      });
     }
   } catch (err) {
     res.status(500).json({ message: err.message });
@@ -47,36 +45,29 @@ router.get("/:title/:studentName", async (req, res) => {
 
 // Rota para devolução de um livro
 router.post("/devolution/:title", async (req, res) => {
-    const { title } = req.params;
-    
-    try {
-        const book = await Book.findOne({ title, disponibility: false });
-    
-        if (book) {
-        book.disponibility = true;
-        book.deliveryDate = null;
-        await book.save();
-    
-        res.json({ message: "Livro devolvido com sucesso!", book });
-        } else {
-        res
-            .status(404)
-            .json({
-            message: "Livro não encontrado ou não disponível para devolução.",
-            });
-        }
-    } catch (err) {
-        res.status(500).json({ message: err.message });
+  const { title } = req.params;
+
+  try {
+    const book = await Book.findOne({ title, disponibility: false });
+
+    if (book) {
+      book.disponibility = true;
+      book.deliveryDate = null;
+      await book.save();
+
+      res.json({ message: "Livro devolvido com sucesso!", book });
+    } else {
+      res.status(404).json({
+        message: "Livro não encontrado ou não disponível para devolução.",
+      });
     }
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 });
 
 //Cadastrar um novo livro - Somente para ADM
-router.post("/", async (req, res) => {
-  const { admin, name} = req.params;
-  if (admin !== "true") {
-    return res.status(401).json({ message: "Acesso negado!"});
-  }
-
+router.post("/cadastro", auth, async (req, res) => {
   const newBook = new Book({
     title: req.body.title,
     author: req.body.author,
