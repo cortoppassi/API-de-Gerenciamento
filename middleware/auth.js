@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 
-const authorizeAdmin = (req, res, next) => {
+const auth = (req, res, next) => {
   const { token } = req.headers;
 
   if (!token) {
@@ -8,17 +8,17 @@ const authorizeAdmin = (req, res, next) => {
   }
 
   try {
-    const decodedToken = jwt.verify(token, 'secreto'); // Substitua 'secreto' pelo segredo real usado na criação do token
+    const decodedToken = jwt.verify(token, 'secreto');
 
-    if (!decodedToken || !decodedToken.admin) {
+    if (!decodedToken) {
       return res.status(403).json({ message: 'Acesso negado! Somente para administradores.' });
     }
 
-    // Se chegou até aqui, o usuário é um admin
-    next(); // Chama o próximo middleware ou a rota pretendida
+    
+    next();
   } catch (err) {
     res.status(401).json({ message: 'Token inválido. Acesso negado!' });
   }
 };
 
-module.exports = authorizeAdmin;
+module.exports = auth;

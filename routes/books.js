@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Book = require("../models/book");
 const Student = require("../models/student");
+const auth = require("../middleware/auth");
 
 //Obter todos os livros
 router.get("/", async (req, res) => {
@@ -70,7 +71,7 @@ router.post("/devolution/:title", async (req, res) => {
 });
 
 //Cadastrar um novo livro - Somente para ADM
-router.post("/:admin", async (req, res) => {
+router.post("/", async (req, res) => {
   const { admin, name} = req.params;
   if (admin !== "true") {
     return res.status(401).json({ message: "Acesso negado!"});
@@ -93,7 +94,7 @@ router.post("/:admin", async (req, res) => {
 });
 
 //Excluir um livro - Somente para ADM
-router.delete("/:id", async (req, res) => {
+router.delete("/:id", auth, async (req, res, next) => {
   try {
     await res.book.deleteOne();
     res.json({ message: "Livro removido com sucesso!" });
