@@ -4,44 +4,58 @@ const Book = require("../models/book");
 const Student = require("../models/student");
 const auth = require("../middleware/auth");
 
-//Obter todos os livros
-router.get("/", async (req, res) => {
-  try {
-    const books = await Book.find();
-    res.json(books);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
+//Obter todos os livros ou filtar por title, category e author
+router.get("/filter", async (req, res) => {
+  const {title, category, author} = req.query;
+
+ try {
+  const filter = {};
+  if (title) filter.title = new RegExp(title, 'i');
+  if (category) filter.category = new RegExp(category, 'i')
+  if (author) filter.author = new RegExp(author, 'i')
+
+  const books = await Book.find(filter)
+    if(books.length > 0){
+      res.json(books)
+    } else {
+      res.status(404).json({ message: 'Nenhum livro encontrado com os critérios fornecidos.' });
+    }
+  } catch (error) {
+    res.status(500).json({ message: err.message })
   }
-});
+})
 
 // Rota para locação de um livro - Somente para alunos
-router.get("/:title/:studentName", async (req, res) => {
-  const { title, studentName } = req.params;
-
+router.get("/location/:title/:id", async (req, res) => {
+  const { title, id } = req.params;
   try {
-    const student = await Student.findOne({ name: studentName });
-    if (!student) {
+    
+    const studentID = await Student.findById(id);
+    
+    if (!studentID) {
       return res.status(404).json({ message: "Aluno não encontrado!" });
     }
 
     const book = await Book.findOne({ title, disponibility: true });
-
-    if (book) {
-      book.disponibility = false;
-      const deliveryDate = new Date();
-      deliveryDate.setDate(deliveryDate.getDate() + 3);
-      await book.save();
-
-      res.json({ message: "Livro locado com sucesso!", book, student });
-    } else {
-      res.status(404).json({
+    if (!book) {
+      return res.status(404).json({
         message: "Livro não encontrado ou não disponível para locação.",
       });
     }
+
+    book.disponibility = false;
+    const deliveryDate = new Date();
+    deliveryDate.setDate(deliveryDate.getDate() + 3);
+    book.deliveryDate = deliveryDate;
+    await book.save();
+
+    res.json({ message: "Livro locado com sucesso!", book, studentID });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 });
+
+
 
 // Rota para devolução de um livro
 router.post("/devolution/:title", async (req, res) => {

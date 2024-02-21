@@ -15,7 +15,7 @@ router.get("/", async (req, res) => {
 });
 
 // Rota para cadastrar um novo aluno - Somente para ADM
-router.post("/",  auth, async (req, res) => {
+router.post("/register",  auth, async (req, res) => {
   const newStudent = new Student({
     name: req.body.name,
     cpf: req.body.cpf,
@@ -24,7 +24,7 @@ router.post("/",  auth, async (req, res) => {
 
   try {
     const savedStudent = await newStudent.save();
-    res.status(201).json(savedStudent);
+    res.json({ message: 'Aluno cadastrado com sucesso!'});
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -32,15 +32,15 @@ router.post("/",  auth, async (req, res) => {
 
 // Rota para deletar um aluno - Somente para ADM
 router.delete("/delete/:id", auth, async (req, res) => {
-  const studentId = req.params.id;
+  const { id } = req.params;
   try {
-    const student = await Student.findById(studentId);
+    const studentId = await Student.findById(id);
 
-    if (!student) {
+    if (!studentId) {
       return res.status(404).json({ message: "Aluno não encontrado!" });
     }
 
-    await student.deleteOne();
+    await Student.deleteOne();
     res.json({ message: 'Aluno deletado com sucesso!' });
   } catch (error) {
     res.status(500).json({ message: error.message });

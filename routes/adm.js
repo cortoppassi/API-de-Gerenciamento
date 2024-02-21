@@ -6,11 +6,11 @@ require("dotenv").config();
 const auth = require("../middleware/auth");
 
 //Rota para criar um novo administrador - Somente para ADM
-router.post("/", auth, async (req, res) => {
-  const { name, password } = req.params;
+router.post("/addAdm", auth, async (req, res) => {
+  const { login, password } = req.body;
 
     const newAdmin = new Admin({
-        name: req.body.name,
+        login: req.body.login,
         password: req.body.password 
     });
 
@@ -22,8 +22,10 @@ router.post("/", auth, async (req, res) => {
   }
 });
 
+
+
 //Rota para obter todos os administradores - Somente para ADM
-router.get("/", auth, async (req, res) => {
+router.get("/listAdm", auth, async (req, res) => {
   try {
     const admins = await Admin.find();
     res.json(admins);
@@ -34,10 +36,10 @@ router.get("/", auth, async (req, res) => {
 
 //Rota para logar um administrador
 router.post("/login", async (req, res) => {
-  const { name, password } = req.body;
-  const admin = await Admin.findOne({ name, password });
+  const { login, password } = req.body;
+  const admin = await Admin.findOne({ login, password });
 
-  if (name === admin.name && password === admin.password) {
+  if (login === admin.login && password === admin.password) {
     
     const token = jwt.sign({ admin: 1}, process.env.SECRET, {expiresIn: 300 });
     res.json({auht: true , token, message: "Login efetuado com sucesso!" });
@@ -48,7 +50,7 @@ router.post("/login", async (req, res) => {
 });
 
 //Rota para deletar um administrador - Somente para ADM
-router.delete("/admin/:id", auth, async (req, res) => {
+router.delete("/delAdm/:id", auth, async (req, res) => {
   const adminId = req.params.id;
   try {
     const admin = await Admin.findById(adminId);
