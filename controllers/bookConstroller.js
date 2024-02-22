@@ -100,6 +100,7 @@ const excluirLivro = async (req, res) => {
   const { id } = req.params;
   try {
     const livroId = await Book.findById(id);
+
     await livroId.deleteOne({_id: id});
     res.json({ message: "Livro removido com sucesso!" });
   } catch (err) {
