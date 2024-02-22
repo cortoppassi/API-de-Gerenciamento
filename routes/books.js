@@ -26,7 +26,7 @@ router.get("/filter", async (req, res) => {
   }
 })
 
-// Rota para locação de um livro - Somente para alunos //TODO - Adicionar Livro Locado ao rentedBooks
+// Rota para locação de um livro - Somente para alunos
 router.get("/location/:title/:id", async (req, res) => {
   const { title, id } = req.params;
   try {
