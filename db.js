@@ -11,4 +11,8 @@ const connectDB = async () => {
   }
 };
 
+const insert = async () => {
+  
+}
+
 module.exports = connectDB;

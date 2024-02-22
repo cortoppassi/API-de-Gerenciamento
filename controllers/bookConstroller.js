@@ -97,8 +97,10 @@ const cadastrarLivro = async (req, res) => {
   }
 };
 const excluirLivro = async (req, res) => {
+  const { id } = req.params;
   try {
-    await res.book.deleteOne();
+    const livroId = await Book.findById(id);
+    await livroId.deleteOne({_id: id});
     res.json({ message: "Livro removido com sucesso!" });
   } catch (err) {
     res.status(500).json({ message: err.message });
