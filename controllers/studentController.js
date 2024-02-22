@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Student = require("../models/student");
 
-const obterTodosAlunos = async (req, res) => {
+const listarTodosAlunos = async (req, res) => {
   try {
     const alunos = await Student.find();
     res.json(alunos);
@@ -10,7 +10,6 @@ const obterTodosAlunos = async (req, res) => {
     res.status(500).json({ mensagem: err.message });
   }
 };
-
 const cadastrarAluno = async (req, res) => {
   const novoAluno = new Student({
     nome: req.body.nome,
@@ -20,12 +19,11 @@ const cadastrarAluno = async (req, res) => {
 
   try {
     const alunoSalvo = await novoAluno.save();
-    res.json({ mensagem: 'Aluno cadastrado com sucesso!'});
+    res.json({ mensagem: "Aluno cadastrado com sucesso!" });
   } catch (err) {
     res.status(400).json({ mensagem: err.message });
   }
 };
-
 const deletarAluno = async (req, res) => {
   const { id } = req.params;
   try {
@@ -36,14 +34,14 @@ const deletarAluno = async (req, res) => {
     }
 
     await Student.deleteOne({ _id: id });
-    res.json({ mensagem: 'Aluno deletado com sucesso!' });
+    res.json({ mensagem: "Aluno deletado com sucesso!" });
   } catch (error) {
     res.status(500).json({ mensagem: error.message });
   }
 };
 
 module.exports = {
-    obterTodosAlunos,
-    cadastrarAluno,
-    deletarAluno,
-  };
+  listarTodosAlunos,
+  cadastrarAluno,
+  deletarAluno,
+};
