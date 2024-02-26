@@ -4,8 +4,6 @@ const Admin = require("../models/admin");
 const jwt = require("jsonwebtoken");
 
 const criarAdministrador = async (req, res) => {
-  const { login, password } = req.body;
-
   const newAdmin = new Admin({
     login: req.body.login,
     password: req.body.password,
