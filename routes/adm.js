@@ -1,8 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Admin = require("../models/admin");
 const adminConstroller = require("../controllers/adminController");
-require("dotenv").config();
 const auth = require("../middleware/auth");
 
 router.post("/login", adminConstroller.loginAdministrador);

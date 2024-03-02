@@ -10,9 +10,4 @@ const connectDB = async () => {
     process.exit(1);
   }
 };
-
-const insert = async () => {
-  
-}
-
 module.exports = connectDB;
